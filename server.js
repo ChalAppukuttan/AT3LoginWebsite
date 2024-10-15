@@ -1,17 +1,19 @@
-// importing modules
+// Importing modules
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-// run an instance of express
+// Run an instance of express
 const app = express();
 
-// parse form data
+// Parse form data
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Serve static files (like HTML)
 app.use(express.static(path.join(__dirname, 'public')));
+
+// === USER REGISTRATION AND LOGIN SYSTEM ===
 
 // Serve the register page
 app.get('/register', (req, res) => {
@@ -33,11 +35,11 @@ app.post('/register', (req, res) => {
     });
 });
 
-// Handle login (from the previous step)
+// Handle login
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    // Read the logins.txt file to check if the user exists
+    // Check if the user exists
     fs.readFile('logins.txt', 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading file', err);
@@ -53,7 +55,32 @@ app.post('/login', (req, res) => {
     });
 });
 
-// starting the server
+// === DONUT ORDER SYSTEM ===
+
+// Serve the order form for chocolate donuts
+app.get('/order-chocolate-donut.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'order-chocolate-donut.html'));
+});
+
+// Handle donut order form submission
+app.post('/order-chocolate-donut.html', (req, res) => {
+    const { name, address, phone, base, topping, quantity, 'pickup-time': pickupTime } = req.body;
+
+    // Create an order string with the form data
+    const toppingsList = Array.isArray(topping) ? topping.join(', ') : topping; // Handle single vs multiple toppings
+    const orderDetails = `Name: ${name}\nAddress: ${address}\nPhone: ${phone}\nBase: ${base}\nToppings: ${toppingsList}\nQuantity: ${quantity}\nPickup Time: ${pickupTime}\n\n`;
+
+    // Append the order details to orders.txt
+    fs.appendFile('orders.txt', orderDetails, (err) => {
+        if (err) {
+            console.error('Error saving the order', err);
+            return res.status(500).send('Error saving your order. Please try again.');
+        }
+        res.send('Order received! Thank you.');
+    });
+});
+
+// === START THE SERVER ===
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

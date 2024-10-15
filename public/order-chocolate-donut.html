@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Donut Order</title>
+    <link rel="stylesheet" type="text/css" href="styles2.css">
+    <script>
+      function updateDonutImage() {
+        let base = document.querySelector('input[name="base"]:checked').value;
+        let toppings = [];
+        document.querySelectorAll('input[name="topping"]:checked').forEach((topping) => {
+          toppings.push(topping.value);
+        });
+
+        let imagePath = `images/donut-${base}-${toppings.join('-')}.png`;
+        document.getElementById('donut-image').src = imagePath;
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1>Custom Donut Order</h1>
+    <ul>
+      <li><a href="test.html">Home</a></li>
+      <li><a href="order-chocolate-donut.html">Order</a></li>
+      <li><a href="view-orders.html">View Orders</a></li>
+    </ul>
+
+    <div>
+      <h2>Order Details:</h2>
+      <form method="post" action="order-custom-donut.html" oninput="updateDonutImage()">
+        
+        <!-- Donut Base Selection -->
+        <h3>Donut Base:</h3>
+        <input type="radio" id="chocolate" name="base" value="chocolate" required> 
+        <label for="chocolate">Chocolate</label><br>
+        
+        <input type="radio" id="cinnamon" name="base" value="cinnamon">
+        <label for="cinnamon">Cinnamon</label><br>
+        
+        <input type="radio" id="glazed" name="base" value="glazed">
+        <label for="glazed">Glazed</label><br>
+        
+        <input type="radio" id="strawberry" name="base" value="strawberry">
+        <label for="strawberry">Strawberry</label><br>
+
+        <!-- Donut Toppings Selection -->
+        <h3>Donut Toppings:</h3>
+        <input type="checkbox" id="strawberries" name="topping" value="strawberries">
+        <label for="strawberries">Strawberries</label><br>
+
+        <input type="checkbox" id="blueberries" name="topping" value="blueberries">
+        <label for="blueberries">Blueberries</label><br>
+
+        <input type="checkbox" id="oreos" name="topping" value="oreos">
+        <label for="oreos">Oreos</label><br>
+
+        <input type="checkbox" id="sprinkles" name="topping" value="sprinkles">
+        <label for="sprinkles">Sprinkles</label><br>
+
+        <!-- Additional Order Info -->
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="address">Address:</label><br>
+        <input type="text" id="address" name="address" required><br>
+
+        <label for="phone">Phone Number:</label><br>
+        <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+        <small>Format: 123-456-7890</small><br>
+
+        <h3>Choose a Quantity:</h3>
+        <input type="number" class="donut-quantity" name="quantity" min="1" max="12" value="1"><br>
+
+        <h3>Choose a Pickup Time:</h3>
+        <input type="datetime-local" class="donut-pickup-time" name="pickup-time"><br>
+
+        <input type="submit" value="Order Now">
+      </form>
+
+      <!-- Donut Image -->
+      <img id="donut-image" src="images/donut-default.png" width="200px" height="200px">
+    </div>
+  </body>
+</html>
